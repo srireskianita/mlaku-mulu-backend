@@ -1,0 +1,21 @@
+{
+	"siteId": "ec932559-ffe5-4f80-9ef6-dfc199c681da",
+	"geolocation": {
+		"data": {
+			"city": "Jayapura",
+			"country": {
+				"code": "ID",
+				"name": "Indonesia"
+			},
+			"subdivision": {
+				"code": "PA",
+				"name": "Papua"
+			},
+			"timezone": "Asia/Jayapura",
+			"latitude": -2.5375,
+			"longitude": 140.7193,
+			"postalCode": "99563"
+		},
+		"timestamp": 1747541396665
+	}
+}
