@@ -1,10 +1,10 @@
 import { Handler } from "@netlify/functions";
-import { connectDB } from "../../../lib/db";
-import Tourist from "../../../models/Tourist";
+import { connectDB } from "../../lib/db";
+import Tourist from "../../models/Tourist";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { response } from "../../../lib/utils/response";
-import { errorHandler } from "../../../lib/utils/errorHandler";
+import { response } from "../../lib/utils/response";
+import { errorHandler } from "../../lib/utils/errorHandler";
 
 const JWT_SECRET = process.env.JWT_SECRET || "mlakulaku-sangat-rahasia";
 

@@ -1,20 +1,10 @@
 [build]
-  command = "npm run build"       
   functions = "netlify/functions"
-  publish = "dist"                
+  command = "npm run build"
 
 [dev]
   functions = "netlify/functions"
-  command = "npm run dev"         
+  autoLaunch = true
 
-# Optional: environment variables (bisa juga diset via Netlify UI)
-[build.environment]
-  NODE_ENV = "production"
-  MONGODB_URI = "mongodb://localhost:27017/mlaku"
-  JWT_SECRET = "mlakulaku-sangat-rahasia"
-
-# Optional: redirect rules jika perlu (misal API route /functions/*)
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+[functions]
+  node_bundler = "esbuild"

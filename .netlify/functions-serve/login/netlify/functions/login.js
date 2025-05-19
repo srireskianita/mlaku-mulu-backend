@@ -6391,9 +6391,9 @@ var require_write_concern = __commonJS({
       }
     };
     exports2.WriteConcern = WriteConcern;
-    function throwIfWriteConcernError(response) {
-      if (typeof response === "object" && response != null) {
-        const writeConcernError = responses_1.MongoDBResponse.is(response) && response.has("writeConcernError") ? response.toObject() : !responses_1.MongoDBResponse.is(response) && "writeConcernError" in response ? response : null;
+    function throwIfWriteConcernError(response2) {
+      if (typeof response2 === "object" && response2 != null) {
+        const writeConcernError = responses_1.MongoDBResponse.is(response2) && response2.has("writeConcernError") ? response2.toObject() : !responses_1.MongoDBResponse.is(response2) && "writeConcernError" in response2 ? response2 : null;
         if (writeConcernError != null) {
           throw new error_1.MongoWriteConcernError(writeConcernError);
         }
@@ -7120,13 +7120,13 @@ var require_utils = __commonJS({
     function get(url2, options = {}) {
       return new Promise((resolve, reject) => {
         let timeoutId;
-        const request2 = http.get(url2, options, (response) => {
-          response.setEncoding("utf8");
+        const request2 = http.get(url2, options, (response2) => {
+          response2.setEncoding("utf8");
           let body = "";
-          response.on("data", (chunk) => body += chunk);
-          response.on("end", () => {
+          response2.on("data", (chunk) => body += chunk);
+          response2.on("end", () => {
             (0, timers_1.clearTimeout)(timeoutId);
-            resolve({ status: response.statusCode, body });
+            resolve({ status: response2.statusCode, body });
           });
         }).on("error", (error) => {
           (0, timers_1.clearTimeout)(timeoutId);
@@ -8955,8 +8955,8 @@ var require_aggregation_cursor = __commonJS({
           }
         }
         const aggregateOperation = new aggregate_1.AggregateOperation(this.namespace, this.pipeline, options);
-        const response = await (0, execute_operation_1.executeOperation)(this.client, aggregateOperation, this.timeoutContext);
-        return { server: aggregateOperation.server, session, response };
+        const response2 = await (0, execute_operation_1.executeOperation)(this.client, aggregateOperation, this.timeoutContext);
+        return { server: aggregateOperation.server, session, response: response2 };
       }
       async explain(verbosity, options) {
         const { explain, timeout } = this.resolveExplainTimeoutOptions(verbosity, options);
@@ -9410,9 +9410,9 @@ var require_find_cursor = __commonJS({
           }
         }
         const findOperation = new find_1.FindOperation(this.namespace, this.cursorFilter, options);
-        const response = await (0, execute_operation_1.executeOperation)(this.client, findOperation, this.timeoutContext);
-        this.numReturned = response.batchSize;
-        return { server: findOperation.server, session, response };
+        const response2 = await (0, execute_operation_1.executeOperation)(this.client, findOperation, this.timeoutContext);
+        this.numReturned = response2.batchSize;
+        return { server: findOperation.server, session, response: response2 };
       }
       /** @internal */
       async getMore(batchSize) {
@@ -9429,9 +9429,9 @@ var require_find_cursor = __commonJS({
             return responses_1.CursorResponse.emptyGetMore;
           }
         }
-        const response = await super.getMore(batchSize);
-        this.numReturned = this.numReturned + response.batchSize;
-        return response;
+        const response2 = await super.getMore(batchSize);
+        this.numReturned = this.numReturned + response2.batchSize;
+        return response2;
       }
       /**
        * Get the count of documents for this cursor
@@ -9916,8 +9916,8 @@ var require_list_indexes_cursor = __commonJS({
           ...this.options,
           session
         });
-        const response = await (0, execute_operation_1.executeOperation)(this.parent.client, operation, this.timeoutContext);
-        return { server: operation.server, session, response };
+        const response2 = await (0, execute_operation_1.executeOperation)(this.parent.client, operation, this.timeoutContext);
+        return { server: operation.server, session, response: response2 };
       }
     };
     exports2.ListIndexesCursor = ListIndexesCursor;
@@ -10133,8 +10133,8 @@ var require_estimated_document_count = __commonJS({
         if (this.options.comment !== void 0) {
           cmd.comment = this.options.comment;
         }
-        const response = await super.executeCommand(server, session, cmd, timeoutContext);
-        return response?.n || 0;
+        const response2 = await super.executeCommand(server, session, cmd, timeoutContext);
+        return response2?.n || 0;
       }
     };
     exports2.EstimatedDocumentCountOperation = EstimatedDocumentCountOperation;
@@ -11494,11 +11494,11 @@ var require_change_stream_cursor = __commonJS({
         }
         this.hasReceived = true;
       }
-      _processBatch(response) {
-        const { postBatchResumeToken } = response;
+      _processBatch(response2) {
+        const { postBatchResumeToken } = response2;
         if (postBatchResumeToken) {
           this.postBatchResumeToken = postBatchResumeToken;
-          if (response.batchSize === 0) {
+          if (response2.batchSize === 0) {
             this.resumeToken = postBatchResumeToken;
           }
         }
@@ -11514,24 +11514,24 @@ var require_change_stream_cursor = __commonJS({
           ...this.changeStreamCursorOptions,
           session
         });
-        const response = await (0, execute_operation_1.executeOperation)(session.client, aggregateOperation, this.timeoutContext);
+        const response2 = await (0, execute_operation_1.executeOperation)(session.client, aggregateOperation, this.timeoutContext);
         const server = aggregateOperation.server;
         this.maxWireVersion = (0, utils_1.maxWireVersion)(server);
         if (this.startAtOperationTime == null && this.changeStreamCursorOptions.resumeAfter == null && this.changeStreamCursorOptions.startAfter == null && this.maxWireVersion >= 7) {
-          this.startAtOperationTime = response.operationTime;
+          this.startAtOperationTime = response2.operationTime;
         }
-        this._processBatch(response);
-        this.emit(constants_1.INIT, response);
+        this._processBatch(response2);
+        this.emit(constants_1.INIT, response2);
         this.emit(constants_1.RESPONSE);
-        return { server, session, response };
+        return { server, session, response: response2 };
       }
       async getMore(batchSize) {
-        const response = await super.getMore(batchSize);
+        const response2 = await super.getMore(batchSize);
         this.maxWireVersion = (0, utils_1.maxWireVersion)(this.server);
-        this._processBatch(response);
-        this.emit(change_stream_1.ChangeStream.MORE, response);
+        this._processBatch(response2);
+        this.emit(change_stream_1.ChangeStream.MORE, response2);
         this.emit(change_stream_1.ChangeStream.RESPONSE);
-        return response;
+        return response2;
       }
     };
     exports2.ChangeStreamCursor = ChangeStreamCursor;
@@ -11905,8 +11905,8 @@ var require_list_collections_cursor = __commonJS({
           session,
           signal: this.signal
         });
-        const response = await (0, execute_operation_1.executeOperation)(this.parent.client, operation, this.timeoutContext);
-        return { server: operation.server, session, response };
+        const response2 = await (0, execute_operation_1.executeOperation)(this.parent.client, operation, this.timeoutContext);
+        return { server: operation.server, session, response: response2 };
       }
     };
     exports2.ListCollectionsCursor = ListCollectionsCursor;
@@ -11988,11 +11988,11 @@ var require_run_command_cursor = __commonJS({
           readPreference: this.cursorOptions.readPreference,
           responseType: responses_1.CursorResponse
         });
-        const response = await (0, execute_operation_1.executeOperation)(this.client, operation, this.timeoutContext);
+        const response2 = await (0, execute_operation_1.executeOperation)(this.client, operation, this.timeoutContext);
         return {
           server: operation.server,
           session,
-          response
+          response: response2
         };
       }
       /** @internal */
@@ -13195,8 +13195,8 @@ var require_gssapi = __commonJS({
       forwardAndReverse: "forwardAndReverse"
     });
     async function externalCommand(connection, command) {
-      const response = await connection.command((0, utils_1.ns)("$external.$cmd"), command);
-      return response;
+      const response2 = await connection.command((0, utils_1.ns)("$external.$cmd"), command);
+      return response2;
     }
     var krb;
     var GSSAPI = class extends auth_provider_1.AuthProvider {
@@ -13263,8 +13263,8 @@ var require_gssapi = __commonJS({
     }
     async function negotiate(client, retries, payload) {
       try {
-        const response = await client.step(payload);
-        return response || "";
+        const response2 = await client.step(payload);
+        return response2 || "";
       } catch (error) {
         if (retries === 0) {
           throw error;
@@ -13273,8 +13273,8 @@ var require_gssapi = __commonJS({
       }
     }
     async function finalize(client, user, payload) {
-      const response = await client.unwrap(payload);
-      return await client.wrap(response || "", { user });
+      const response2 = await client.unwrap(payload);
+      return await client.wrap(response2 || "", { user });
     }
     async function performGSSAPICanonicalizeHostName(host, mechanismProperties) {
       const mode = mechanismProperties.CANONICALIZE_HOST_NAME;
@@ -18764,8 +18764,8 @@ var require_azure = __commonJS({
     };
     exports2.AzureCredentialCache = AzureCredentialCache;
     exports2.tokenCache = new AzureCredentialCache();
-    async function parseResponse(response) {
-      const { status, body: rawBody } = response;
+    async function parseResponse(response2) {
+      const { status, body: rawBody } = response2;
       const body = (() => {
         try {
           return JSON.parse(rawBody);
@@ -18808,8 +18808,8 @@ var require_azure = __commonJS({
     async function fetchAzureKMSToken(options = {}) {
       const { headers, url } = prepareRequest(options);
       try {
-        const response = await (0, utils_1.get)(url, { headers });
-        return await parseResponse(response);
+        const response2 = await (0, utils_1.get)(url, { headers });
+        return await parseResponse(response2);
       } catch (error) {
         if (error instanceof error_1.MongoNetworkTimeoutError) {
           throw new errors_1.MongoCryptAzureKMSRequestError(`[Azure KMS] ${error.message}`);
@@ -19225,11 +19225,11 @@ var require_state_machine = __commonJS({
         if (options?.signal) {
           commandOptions.signal = options.signal;
         }
-        const response = await client.db(db).command(rawCommand, {
+        const response2 = await client.db(db).command(rawCommand, {
           ...bsonOptions,
           ...commandOptions
         });
-        return (0, bson_1.serialize)(response, this.bsonOptions);
+        return (0, bson_1.serialize)(response2, this.bsonOptions);
       }
       /**
        * Requests keys from the keyVault collection on the topology.
@@ -20085,9 +20085,9 @@ var require_auto_encrypter = __commonJS({
       /**
        * Decrypt a command response
        */
-      async decrypt(response, options = {}) {
+      async decrypt(response2, options = {}) {
         options.signal?.throwIfAborted();
-        const context = this._mongocrypt.makeDecryptionContext(response);
+        const context = this._mongocrypt.makeDecryptionContext(response2);
         context.id = this._contextCounter++;
         const stateMachine = new state_machine_1.StateMachine({
           ...options,
@@ -21857,27 +21857,27 @@ var require_stream_description = __commonJS({
         this.compressors = options && options.compressors && Array.isArray(options.compressors) ? options.compressors : [];
         this.serverConnectionId = null;
       }
-      receiveResponse(response) {
-        if (response == null) {
+      receiveResponse(response2) {
+        if (response2 == null) {
           return;
         }
-        this.hello = response;
-        this.type = (0, server_description_1.parseServerType)(response);
-        if ("connectionId" in response) {
-          this.serverConnectionId = this.parseServerConnectionID(response.connectionId);
+        this.hello = response2;
+        this.type = (0, server_description_1.parseServerType)(response2);
+        if ("connectionId" in response2) {
+          this.serverConnectionId = this.parseServerConnectionID(response2.connectionId);
         } else {
           this.serverConnectionId = null;
         }
         for (const field of RESPONSE_FIELDS) {
-          if (response[field] != null) {
-            this[field] = response[field];
+          if (response2[field] != null) {
+            this[field] = response2[field];
           }
-          if ("__nodejs_mock_server__" in response) {
-            this.__nodejs_mock_server__ = response["__nodejs_mock_server__"];
+          if ("__nodejs_mock_server__" in response2) {
+            this.__nodejs_mock_server__ = response2["__nodejs_mock_server__"];
           }
         }
-        if (response.compression) {
-          this.compressor = this.compressors.filter((c) => response.compression?.includes(c))[0];
+        if (response2.compression) {
+          this.compressor = this.compressors.filter((c) => response2.compression?.includes(c))[0];
         }
       }
       /* @internal */
@@ -21926,7 +21926,7 @@ var require_on_data = __commonJS({
           return closeHandler();
         },
         throw(err) {
-          errorHandler(err);
+          errorHandler2(err);
           return Promise.resolve({ value: void 0, done: true });
         },
         [Symbol.asyncIterator]() {
@@ -21934,13 +21934,13 @@ var require_on_data = __commonJS({
         }
       };
       emitter.on("data", eventHandler);
-      emitter.on("error", errorHandler);
+      emitter.on("error", errorHandler2);
       const abortListener = (0, utils_1.addAbortListener)(signal, function() {
-        errorHandler(this.reason);
+        errorHandler2(this.reason);
       });
       const timeoutForSocketRead = timeoutContext?.timeoutForSocketRead;
       timeoutForSocketRead?.throwIfExpired();
-      timeoutForSocketRead?.then(void 0, errorHandler);
+      timeoutForSocketRead?.then(void 0, errorHandler2);
       return iterator;
       function eventHandler(value) {
         const promise = unconsumedPromises.shift();
@@ -21949,7 +21949,7 @@ var require_on_data = __commonJS({
         else
           unconsumedEvents.push(value);
       }
-      function errorHandler(err) {
+      function errorHandler2(err) {
         const promise = unconsumedPromises.shift();
         if (promise != null)
           promise.reject(err);
@@ -21959,7 +21959,7 @@ var require_on_data = __commonJS({
       }
       function closeHandler() {
         emitter.off("data", eventHandler);
-        emitter.off("error", errorHandler);
+        emitter.off("error", errorHandler2);
         abortListener?.[utils_1.kDispose]();
         finished = true;
         timeoutForSocketRead?.clear();
@@ -22044,8 +22044,8 @@ var require_connection = __commonJS({
         return this.description.hello;
       }
       // the `connect` method stores the result of the handshake hello on the connection
-      set hello(response) {
-        this.description.receiveResponse(response);
+      set hello(response2) {
+        this.description.receiveResponse(response2);
         Object.freeze(this.description);
       }
       get serviceId() {
@@ -22179,9 +22179,9 @@ var require_connection = __commonJS({
           if (options.timeoutContext?.csotEnabled() && options.timeoutContext.minRoundTripTime != null && options.timeoutContext.remainingTimeMS < options.timeoutContext.minRoundTripTime) {
             throw new error_1.MongoOperationTimeoutError("Server roundtrip time is greater than the time remaining");
           }
-          for await (const response of this.readMany(options)) {
+          for await (const response2 of this.readMany(options)) {
             this.socket.setTimeout(0);
-            const bson = response.parse();
+            const bson = response2.parse();
             const document2 = (responseType ?? responses_1.MongoDBResponse).make(bson);
             yield document2;
             this.throwIfAborted();
@@ -22331,9 +22331,9 @@ var require_connection = __commonJS({
           this.dataEvents = (0, on_data_1.onData)(this.messageStream, options);
           this.messageStream.resume();
           for await (const message of this.dataEvents) {
-            const response = await (0, compression_1.decompressResponse)(message);
-            yield response;
-            if (!response.moreToCome) {
+            const response2 = await (0, compression_1.decompressResponse)(message);
+            yield response2;
+            if (!response2.moreToCome) {
               return;
             }
           }
@@ -22519,27 +22519,27 @@ var require_connect = __commonJS({
         handshakeOptions.socketTimeoutMS = options.connectTimeoutMS;
       }
       const start = (/* @__PURE__ */ new Date()).getTime();
-      const response = await executeHandshake(handshakeDoc, handshakeOptions);
-      if (!("isWritablePrimary" in response)) {
-        response.isWritablePrimary = response[constants_1.LEGACY_HELLO_COMMAND];
+      const response2 = await executeHandshake(handshakeDoc, handshakeOptions);
+      if (!("isWritablePrimary" in response2)) {
+        response2.isWritablePrimary = response2[constants_1.LEGACY_HELLO_COMMAND];
       }
-      if (response.helloOk) {
+      if (response2.helloOk) {
         conn.helloOk = true;
       }
-      const supportedServerErr = checkSupportedServer(response, options);
+      const supportedServerErr = checkSupportedServer(response2, options);
       if (supportedServerErr) {
         throw supportedServerErr;
       }
       if (options.loadBalanced) {
-        if (!response.serviceId) {
+        if (!response2.serviceId) {
           throw new error_1.MongoCompatibilityError("Driver attempted to initialize in load balancing mode, but the server does not support this mode.");
         }
       }
-      conn.hello = response;
+      conn.hello = response2;
       conn.lastHelloMS = (/* @__PURE__ */ new Date()).getTime() - start;
-      if (!response.arbiterOnly && credentials) {
-        authContext.response = response;
-        const resolvedCredentials = credentials.resolveAuthMechanism(response);
+      if (!response2.arbiterOnly && credentials) {
+        authContext.response = response2;
+        const resolvedCredentials = credentials.resolveAuthMechanism(response2);
         const provider = options.authProviders.getOrCreateProvider(resolvedCredentials.mechanism, resolvedCredentials.mechanismProperties);
         if (!provider) {
           throw new error_1.MongoInvalidArgumentError(`No AuthProvider for ${resolvedCredentials.mechanism} defined.`);
@@ -22549,7 +22549,7 @@ var require_connect = __commonJS({
         } catch (error) {
           if (error instanceof error_1.MongoError) {
             error.addErrorLabel(error_1.MongoErrorLabel.HandshakeError);
-            if ((0, error_1.needsRetryableWriteLabel)(error, response.maxWireVersion, conn.description.type)) {
+            if ((0, error_1.needsRetryableWriteLabel)(error, response2.maxWireVersion, conn.description.type)) {
               error.addErrorLabel(error_1.MongoErrorLabel.RetryableWriteError);
             }
           }
@@ -25707,24 +25707,24 @@ var require_azure_machine_workflow = __commonJS({
         if (!tokenAudience) {
           throw new error_1.MongoAzureError(TOKEN_RESOURCE_MISSING_ERROR);
         }
-        const response = await getAzureTokenData(tokenAudience, username);
-        if (!isEndpointResultValid(response)) {
+        const response2 = await getAzureTokenData(tokenAudience, username);
+        if (!isEndpointResultValid(response2)) {
           throw new error_1.MongoAzureError(ENDPOINT_RESULT_ERROR);
         }
-        return response;
+        return response2;
       }
     };
     exports2.AzureMachineWorkflow = AzureMachineWorkflow;
     async function getAzureTokenData(tokenAudience, username) {
       const url = new URL(azure_1.AZURE_BASE_URL);
       (0, azure_1.addAzureParams)(url, tokenAudience, username);
-      const response = await (0, utils_1.get)(url, {
+      const response2 = await (0, utils_1.get)(url, {
         headers: AZURE_HEADERS
       });
-      if (response.status !== 200) {
-        throw new error_1.MongoAzureError(`Status code ${response.status} returned from the Azure endpoint. Response body: ${response.body}`);
+      if (response2.status !== 200) {
+        throw new error_1.MongoAzureError(`Status code ${response2.status} returned from the Azure endpoint. Response body: ${response2.body}`);
       }
-      const result = JSON.parse(response.body);
+      const result = JSON.parse(response2.body);
       return {
         access_token: result.access_token,
         expires_in: Number(result.expires_in)
@@ -25772,13 +25772,13 @@ var require_gcp_machine_workflow = __commonJS({
     async function getGcpTokenData(tokenAudience) {
       const url = new URL(GCP_BASE_URL);
       url.searchParams.append("audience", tokenAudience);
-      const response = await (0, utils_1.get)(url, {
+      const response2 = await (0, utils_1.get)(url, {
         headers: GCP_HEADERS
       });
-      if (response.status !== 200) {
-        throw new error_1.MongoGCPError(`Status code ${response.status} returned from the GCP endpoint. Response body: ${response.body}`);
+      if (response2.status !== 200) {
+        throw new error_1.MongoGCPError(`Status code ${response2.status} returned from the GCP endpoint. Response body: ${response2.body}`);
       }
-      return { access_token: response.body };
+      return { access_token: response2.body };
     }
   }
 });
@@ -25858,10 +25858,10 @@ var require_token_cache = __commonJS({
         }
         return this.idpInfo;
       }
-      put(response, idpInfo) {
-        this.accessToken = response.accessToken;
-        this.refreshToken = response.refreshToken;
-        this.expiresInSeconds = response.expiresInSeconds;
+      put(response2, idpInfo) {
+        this.accessToken = response2.accessToken;
+        this.refreshToken = response2.refreshToken;
+        this.expiresInSeconds = response2.expiresInSeconds;
         if (idpInfo) {
           this.idpInfo = idpInfo;
         }
@@ -25945,15 +25945,15 @@ var require_mongodb_oidc = __commonJS({
        * Authenticate using OIDC
        */
       async auth(authContext) {
-        const { connection, reauthenticating, response } = authContext;
-        if (response?.speculativeAuthenticate?.done && !reauthenticating) {
+        const { connection, reauthenticating, response: response2 } = authContext;
+        if (response2?.speculativeAuthenticate?.done && !reauthenticating) {
           return;
         }
         const credentials = getCredentials(authContext);
         if (reauthenticating) {
           await this.workflow.reauthenticate(connection, credentials);
         } else {
-          await this.workflow.execute(connection, credentials, response);
+          await this.workflow.execute(connection, credentials, response2);
         }
       }
       /**
@@ -26036,10 +26036,10 @@ var require_callback_workflow = __commonJS({
        * authentication document from the initial handshake, then we will use that
        * value to get the issuer, otherwise we will send the saslStart command.
        */
-      async startAuthentication(connection, credentials, response) {
+      async startAuthentication(connection, credentials, response2) {
         let result;
-        if (response?.speculativeAuthenticate) {
-          result = response.speculativeAuthenticate;
+        if (response2?.speculativeAuthenticate) {
+          result = response2.speculativeAuthenticate;
         } else {
           result = await connection.command((0, utils_1.ns)(credentials.source), (0, command_builders_1.startCommandDocument)(credentials), void 0);
         }
@@ -26126,10 +26126,10 @@ var require_automated_callback_workflow = __commonJS({
             }
           }
         }
-        const response = await this.fetchAccessToken(credentials);
-        this.cache.put(response);
-        connection.accessToken = response.accessToken;
-        await this.finishAuthentication(connection, credentials, response.accessToken);
+        const response2 = await this.fetchAccessToken(credentials);
+        this.cache.put(response2);
+        connection.accessToken = response2.accessToken;
+        await this.finishAuthentication(connection, credentials, response2.accessToken);
       }
       /**
        * Fetches the access token using the callback.
@@ -26668,9 +26668,9 @@ var require_scram = __commonJS({
         return request;
       }
       async auth(authContext) {
-        const { reauthenticating, response } = authContext;
-        if (response?.speculativeAuthenticate && !reauthenticating) {
-          return await continueScramConversation(this.cryptoMethod, response.speculativeAuthenticate, authContext);
+        const { reauthenticating, response: response2 } = authContext;
+        if (response2?.speculativeAuthenticate && !reauthenticating) {
+          return await continueScramConversation(this.cryptoMethod, response2.speculativeAuthenticate, authContext);
         }
         return await executeScram(this.cryptoMethod, authContext);
       }
@@ -26708,10 +26708,10 @@ var require_scram = __commonJS({
       const nonce = authContext.nonce;
       const db = credentials.source;
       const saslStartCmd = makeFirstMessage(cryptoMethod, credentials, nonce);
-      const response = await connection.command((0, utils_1.ns)(`${db}.$cmd`), saslStartCmd, void 0);
-      await continueScramConversation(cryptoMethod, response, authContext);
+      const response2 = await connection.command((0, utils_1.ns)(`${db}.$cmd`), saslStartCmd, void 0);
+      await continueScramConversation(cryptoMethod, response2, authContext);
     }
-    async function continueScramConversation(cryptoMethod, response, authContext) {
+    async function continueScramConversation(cryptoMethod, response2, authContext) {
       const connection = authContext.connection;
       const credentials = authContext.credentials;
       if (!credentials) {
@@ -26725,7 +26725,7 @@ var require_scram = __commonJS({
       const username = cleanUsername(credentials.username);
       const password = credentials.password;
       const processedPassword = cryptoMethod === "sha256" ? (0, saslprep_1.saslprep)(password) : passwordDigest(username, password);
-      const payload = Buffer.isBuffer(response.payload) ? new bson_1.Binary(response.payload) : response.payload;
+      const payload = Buffer.isBuffer(response2.payload) ? new bson_1.Binary(response2.payload) : response2.payload;
       const dict = parsePayload(payload);
       const iterations = parseInt(dict.i, 10);
       if (iterations && iterations < 4096) {
@@ -26752,7 +26752,7 @@ var require_scram = __commonJS({
       const serverSignature = HMAC(cryptoMethod, serverKey, authMessage);
       const saslContinueCmd = {
         saslContinue: 1,
-        conversationId: response.conversationId,
+        conversationId: response2.conversationId,
         payload: new bson_1.Binary(Buffer.from(clientFinal))
       };
       const r = await connection.command((0, utils_1.ns)(`${db}.$cmd`), saslContinueCmd, void 0);
@@ -26896,8 +26896,8 @@ var require_x509 = __commonJS({
         if (!credentials) {
           throw new error_1.MongoMissingCredentialsError("AuthContext must provide credentials.");
         }
-        const response = authContext.response;
-        if (response?.speculativeAuthenticate) {
+        const response2 = authContext.response;
+        if (response2?.speculativeAuthenticate) {
           return;
         }
         await connection.command((0, utils_1.ns)("$external.$cmd"), x509AuthenticateCommand(credentials), void 0);
@@ -28512,9 +28512,9 @@ var require_client_bulk_write_cursor = __commonJS({
           ...this.cursorOptions,
           session
         });
-        const response = await (0, execute_operation_1.executeOperation)(this.client, clientBulkWriteOperation, this.timeoutContext);
-        this.cursorResponse = response;
-        return { server: clientBulkWriteOperation.server, session, response };
+        const response2 = await (0, execute_operation_1.executeOperation)(this.client, clientBulkWriteOperation, this.timeoutContext);
+        this.cursorResponse = response2;
+        return { server: clientBulkWriteOperation.server, session, response: response2 };
       }
     };
     exports2.ClientBulkWriteCursor = ClientBulkWriteCursor;
@@ -28891,8 +28891,8 @@ var require_results_merger = __commonJS({
           }
         } finally {
           if (cursor.response) {
-            const response = cursor.response;
-            this.incrementCounts(response);
+            const response2 = cursor.response;
+            this.incrementCounts(response2);
           }
           this.currentBatchOffset += cursor.operations.length;
         }
@@ -30698,11 +30698,11 @@ var require_abstract_cursor = __commonJS({
         try {
           const state = await this._initialize(this.cursorSession);
           this.cursorOptions.omitMaxTimeMS = this.cursorOptions.timeoutMS != null;
-          const response = state.response;
+          const response2 = state.response;
           this.selectedServer = state.server;
-          this.cursorId = response.id;
-          this.cursorNamespace = response.ns ?? this.namespace;
-          this.documents = response;
+          this.cursorId = response2.id;
+          this.cursorNamespace = response2.ns ?? this.namespace;
+          this.documents = response2;
           this.initialized = true;
         } catch (error) {
           this.initialized = true;
@@ -30730,9 +30730,9 @@ var require_abstract_cursor = __commonJS({
         }
         const batchSize = this.cursorOptions.batchSize || 1e3;
         try {
-          const response = await this.getMore(batchSize);
-          this.cursorId = response.id;
-          this.documents = response;
+          const response2 = await this.getMore(batchSize);
+          this.cursorId = response2.id;
+          this.documents = response2;
         } catch (error) {
           try {
             await this.cleanup(void 0, error);
@@ -33973,6 +33973,7 @@ var require_serverSelection = __commonJS({
             this[key] = err[key];
           }
         }
+        this.cause = reason;
         return this;
       }
     };
@@ -42455,6 +42456,9 @@ var require_schemaType = __commonJS({
     SchemaType.prototype.toJSONSchema = function toJSONSchema() {
       throw new Error("Converting unsupported SchemaType to JSON Schema: " + this.instance);
     };
+    SchemaType.prototype.autoEncryptionType = function autoEncryptionType() {
+      return null;
+    };
     module2.exports = exports2 = SchemaType;
     exports2.CastError = CastError;
     exports2.ValidatorError = ValidatorError;
@@ -44002,8 +44006,11 @@ var require_cast_expr = __commonJS({
     ]);
     var expressionOperator = /* @__PURE__ */ new Set(["$not"]);
     module2.exports = function cast$expr(val, schema, strictQuery) {
+      if (typeof val === "boolean") {
+        return val;
+      }
       if (typeof val !== "object" || val === null) {
-        throw new Error("`$expr` must be an object");
+        throw new Error("`$expr` must be an object or boolean literal");
       }
       return _castExpression(val, schema, strictQuery);
     };
@@ -45389,6 +45396,9 @@ var require_array2 = __commonJS({
         items: embeddedSchemaType.toJSONSchema(options)
       };
     };
+    SchemaArray.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "array";
+    };
     module2.exports = SchemaArray;
   }
 });
@@ -45520,6 +45530,9 @@ var require_bigint2 = __commonJS({
       const isRequired = this.options.required && typeof this.options.required !== "function";
       return createJSONSchemaTypeDefinition("string", "long", options?.useBsonType, isRequired);
     };
+    SchemaBigInt.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "long";
+    };
     module2.exports = SchemaBigInt;
   }
 });
@@ -45629,6 +45642,9 @@ var require_boolean2 = __commonJS({
     SchemaBoolean.prototype.toJSONSchema = function toJSONSchema(options) {
       const isRequired = this.options.required && typeof this.options.required !== "function";
       return createJSONSchemaTypeDefinition("boolean", "bool", options?.useBsonType, isRequired);
+    };
+    SchemaBoolean.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "bool";
     };
     module2.exports = SchemaBoolean;
   }
@@ -45792,6 +45808,9 @@ var require_buffer2 = __commonJS({
     SchemaBuffer.prototype.toJSONSchema = function toJSONSchema(options) {
       const isRequired = this.options.required && typeof this.options.required !== "function";
       return createJSONSchemaTypeDefinition("string", "binData", options?.useBsonType, isRequired);
+    };
+    SchemaBuffer.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "binData";
     };
     module2.exports = SchemaBuffer;
   }
@@ -46003,6 +46022,9 @@ var require_date2 = __commonJS({
       const isRequired = this.options.required && typeof this.options.required !== "function";
       return createJSONSchemaTypeDefinition("string", "date", options?.useBsonType, isRequired);
     };
+    SchemaDate.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "date";
+    };
     module2.exports = SchemaDate;
   }
 });
@@ -46122,6 +46144,9 @@ var require_decimal1283 = __commonJS({
     SchemaDecimal128.prototype.toJSONSchema = function toJSONSchema(options) {
       const isRequired = this.options.required && typeof this.options.required !== "function";
       return createJSONSchemaTypeDefinition("string", "decimal", options?.useBsonType, isRequired);
+    };
+    SchemaDecimal128.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "decimal";
     };
     module2.exports = SchemaDecimal128;
   }
@@ -46543,6 +46568,32 @@ var require_discriminator = __commonJS({
       virtuals: true,
       methods: true
     };
+    function validateDiscriminatorSchemasForEncryption(parentSchema, childSchema) {
+      if (parentSchema.encryptionType() == null && childSchema.encryptionType() == null) return;
+      const allSharedNestedPaths = setIntersection(
+        allNestedPaths(parentSchema),
+        allNestedPaths(childSchema)
+      );
+      for (const path of allSharedNestedPaths) {
+        if (parentSchema._hasEncryptedField(path) && childSchema._hasEncryptedField(path)) {
+          throw new Error(`encrypted fields cannot be declared on both the base schema and the child schema in a discriminator. path=${path}`);
+        }
+        if (parentSchema._hasEncryptedField(path) || childSchema._hasEncryptedField(path)) {
+          throw new Error(`encrypted fields cannot have the same path as a non-encrypted field for discriminators. path=${path}`);
+        }
+      }
+      function allNestedPaths(schema) {
+        return [...Object.keys(schema.paths), ...Object.keys(schema.singleNestedPaths)];
+      }
+      function* setIntersection(i1, i2) {
+        const s1 = new Set(i1);
+        for (const item of i2) {
+          if (s1.has(item)) {
+            yield item;
+          }
+        }
+      }
+    }
     module2.exports = function discriminator(model, name, schema, tiedValue, applyPlugins, mergeHooks, overwriteExisting) {
       if (!(schema && schema.instanceOfSchema)) {
         throw new Error("You must pass a valid discriminator Schema");
@@ -46592,6 +46643,7 @@ var require_discriminator = __commonJS({
       if (typeof tiedValue === "string" && tiedValue.length || tiedValue != null) {
         value = tiedValue;
       }
+      validateDiscriminatorSchemasForEncryption(model.schema, schema);
       function merge(schema2, baseSchema) {
         schema2._baseSchema = baseSchema;
         if (baseSchema.paths._id && baseSchema.paths._id.options && !baseSchema.paths._id.options.auto) {
@@ -47536,6 +47588,9 @@ var require_map2 = __commonJS({
         result.additionalProperties = embeddedSchemaType.toJSONSchema(options);
         return result;
       }
+      autoEncryptionType() {
+        return "object";
+      }
     };
     SchemaMap.schemaName = "Map";
     SchemaMap.prototype.OptionsConstructor = SchemaMapOptions;
@@ -47671,6 +47726,9 @@ var require_objectId = __commonJS({
     SchemaObjectId.prototype.toJSONSchema = function toJSONSchema(options) {
       const isRequired = this.options.required && typeof this.options.required !== "function" || this.path === "_id";
       return createJSONSchemaTypeDefinition("string", "objectId", options?.useBsonType, isRequired);
+    };
+    SchemaObjectId.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "objectId";
     };
     module2.exports = SchemaObjectId;
   }
@@ -47980,6 +48038,9 @@ var require_string2 = __commonJS({
       const isRequired = this.options.required && typeof this.options.required !== "function";
       return createJSONSchemaTypeDefinition("string", "string", options?.useBsonType, isRequired);
     };
+    SchemaString.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "string";
+    };
     module2.exports = SchemaString;
   }
 });
@@ -48162,6 +48223,9 @@ var require_uuid3 = __commonJS({
       const isRequired = this.options.required && typeof this.options.required !== "function";
       return createJSONSchemaTypeDefinition("string", "binData", options?.useBsonType, isRequired);
     };
+    SchemaUUID.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "binData";
+    };
     module2.exports = SchemaUUID;
   }
 });
@@ -48277,6 +48341,9 @@ var require_double3 = __commonJS({
     SchemaDouble.prototype.toJSONSchema = function toJSONSchema(options) {
       const isRequired = this.options.required && typeof this.options.required !== "function";
       return createJSONSchemaTypeDefinition("number", "double", options?.useBsonType, isRequired);
+    };
+    SchemaDouble.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "double";
     };
     module2.exports = SchemaDouble;
   }
@@ -48402,6 +48469,9 @@ var require_int322 = __commonJS({
       const isRequired = this.options.required && typeof this.options.required !== "function";
       return createJSONSchemaTypeDefinition("number", "int", options?.useBsonType, isRequired);
     };
+    SchemaInt32.prototype.autoEncryptionType = function autoEncryptionType() {
+      return "int";
+    };
     module2.exports = SchemaInt32;
   }
 });
@@ -48490,6 +48560,7 @@ var require_schema2 = __commonJS({
       this.plugins = [];
       this.$id = ++id;
       this.mapPaths = [];
+      this.encryptedFields = {};
       this.s = {
         hooks: new Kareem()
       };
@@ -48661,6 +48732,7 @@ var require_schema2 = __commonJS({
         s._applyDiscriminators = new Map(this._applyDiscriminators);
       }
       s.aliases = Object.assign({}, this.aliases);
+      s.encryptedFields = clone(this.encryptedFields);
       return s;
     };
     Schema.prototype.pick = function(paths, options) {
@@ -48669,7 +48741,16 @@ var require_schema2 = __commonJS({
         throw new MongooseError('Schema#pick() only accepts an array argument, got "' + typeof paths + '"');
       }
       for (const path of paths) {
-        if (this.nested[path]) {
+        if (this._hasEncryptedField(path)) {
+          const encrypt = this.encryptedFields[path];
+          const schemaType = this.path(path);
+          newSchema.add({
+            [path]: {
+              encrypt,
+              [this.options.typeKey]: schemaType
+            }
+          });
+        } else if (this.nested[path]) {
           newSchema.add({ [path]: get(this.tree, path) });
         } else {
           const schematype = this.path(path);
@@ -48678,6 +48759,9 @@ var require_schema2 = __commonJS({
           }
           newSchema.add({ [path]: schematype });
         }
+      }
+      if (!this._hasEncryptedFields()) {
+        newSchema.options.encryptionType = null;
       }
       return newSchema;
     };
@@ -48755,6 +48839,15 @@ var require_schema2 = __commonJS({
       this._defaultToObjectOptionsMap = this._defaultToObjectOptionsMap || {};
       this._defaultToObjectOptionsMap[path] = defaultOptions;
       return defaultOptions;
+    };
+    Schema.prototype.encryptionType = function encryptionType(encryptionType) {
+      if (arguments.length === 0) {
+        return this.options.encryptionType;
+      }
+      if (!(typeof encryptionType === "string" || encryptionType === null)) {
+        throw new Error("invalid `encryptionType`: ${encryptionType}");
+      }
+      this.options.encryptionType = encryptionType;
     };
     Schema.prototype.add = function add(obj, prefix) {
       if (obj instanceof Schema || obj != null && obj.instanceOfSchema) {
@@ -48853,12 +48946,82 @@ var require_schema2 = __commonJS({
             }
           }
         }
+        if (val.instanceOfSchema && val.encryptionType() != null) {
+          if (this.encryptionType() != val.encryptionType()) {
+            throw new Error("encryptionType of a nested schema must match the encryption type of the parent schema.");
+          }
+          for (const [encryptedField, encryptedFieldConfig] of Object.entries(val.encryptedFields)) {
+            const path = fullPath + "." + encryptedField;
+            this._addEncryptedField(path, encryptedFieldConfig);
+          }
+        } else if (typeof val === "object" && "encrypt" in val) {
+          const { encrypt } = val;
+          if (this.encryptionType() == null) {
+            throw new Error("encryptionType must be provided");
+          }
+          this._addEncryptedField(fullPath, encrypt);
+        } else {
+          this._removeEncryptedField(fullPath);
+        }
       }
       const aliasObj = Object.fromEntries(
         Object.entries(obj).map(([key]) => [prefix + key, null])
       );
       aliasFields(this, aliasObj);
       return this;
+    };
+    Schema.prototype._addEncryptedField = function _addEncryptedField(path, fieldConfig) {
+      const type = this.path(path).autoEncryptionType();
+      if (type == null) {
+        throw new Error(`Invalid BSON type for FLE field: '${path}'`);
+      }
+      this.encryptedFields[path] = clone(fieldConfig);
+    };
+    Schema.prototype._removeEncryptedField = function _removeEncryptedField(path) {
+      delete this.encryptedFields[path];
+    };
+    Schema.prototype._hasEncryptedFields = function _hasEncryptedFields() {
+      return Object.keys(this.encryptedFields).length > 0;
+    };
+    Schema.prototype._hasEncryptedField = function _hasEncryptedField(path) {
+      return path in this.encryptedFields;
+    };
+    Schema.prototype._buildEncryptedFields = function() {
+      const fields = Object.entries(this.encryptedFields).map(
+        ([path, config]) => {
+          const bsonType = this.path(path).autoEncryptionType();
+          return { path, bsonType, ...config };
+        }
+      );
+      return { fields };
+    };
+    Schema.prototype._buildSchemaMap = function() {
+      function buildNestedPath(path, object, value) {
+        let i = 0, component = path[i];
+        for (; i < path.length - 1; ++i, component = path[i]) {
+          object[component] = object[component] == null ? {
+            bsonType: "object",
+            properties: {}
+          } : object[component];
+          object = object[component].properties;
+        }
+        object[component] = value;
+      }
+      const schemaMapPropertyReducer = (accum, [path, propertyConfig]) => {
+        const bsonType = this.path(path).autoEncryptionType();
+        const pathComponents = path.split(".");
+        const configuration = { encrypt: { ...propertyConfig, bsonType } };
+        buildNestedPath(pathComponents, accum, configuration);
+        return accum;
+      };
+      const properties = Object.entries(this.encryptedFields).reduce(
+        schemaMapPropertyReducer,
+        {}
+      );
+      return {
+        bsonType: "object",
+        properties
+      };
     };
     Schema.prototype.alias = function alias(path, alias) {
       aliasFields(this, { [path]: alias });
@@ -49138,6 +49301,14 @@ var require_schema2 = __commonJS({
         }
       }
       let type = obj[options.typeKey] && (obj[options.typeKey] instanceof Function || options.typeKey !== "type" || !obj.type.type) ? obj[options.typeKey] : {};
+      if (type instanceof SchemaType) {
+        if (type.path === path) {
+          return type;
+        }
+        const clone2 = type.clone();
+        clone2.path = path;
+        return clone2;
+      }
       let name;
       if (utils.isPOJO(type) || type === "mixed") {
         return new MongooseTypes2.Mixed(path, obj);
@@ -49717,6 +49888,7 @@ var require_schema2 = __commonJS({
           }
           delete this.paths[name];
           _deletePath(this, name);
+          this._removeEncryptedField(name);
         }, this);
       }
       return this;
@@ -52037,44 +52209,26 @@ var require_connection2 = __commonJS({
 var require_package2 = __commonJS({
   "node_modules/mongoose/package.json"(exports2, module2) {
     module2.exports = {
-      _from: "mongoose",
-      _id: "mongoose@8.14.3",
-      _inBundle: false,
-      _integrity: "sha512-BiIQK4mZiStUgnNep1YJMMYTiC4K893+Dj/Sr3lvxXutqy4+yZMVhlHq60xRH3r/l6eXkQXO3tXJnVOE5g592Q==",
-      _location: "/mongoose",
-      _phantomChildren: {},
-      _requested: {
-        type: "tag",
-        registry: true,
-        raw: "mongoose",
-        name: "mongoose",
-        escapedName: "mongoose",
-        rawSpec: "",
-        saveSpec: null,
-        fetchSpec: "latest"
-      },
-      _requiredBy: [
-        "#USER",
-        "/"
+      name: "mongoose",
+      description: "Mongoose MongoDB ODM",
+      version: "8.15.0",
+      author: "Guillermo Rauch <guillermo@learnboost.com>",
+      keywords: [
+        "mongodb",
+        "document",
+        "model",
+        "schema",
+        "database",
+        "odm",
+        "data",
+        "datastore",
+        "query",
+        "nosql",
+        "orm",
+        "db"
       ],
-      _resolved: "https://registry.npmjs.org/mongoose/-/mongoose-8.14.3.tgz",
-      _shasum: "4e0373fd76415428eda3d1abab658e80d51375c2",
-      _spec: "mongoose",
-      _where: "/Users/nita/Desktop/mlaku-laku/mlaku-mulu-backend",
-      author: {
-        name: "Guillermo Rauch",
-        email: "guillermo@learnboost.com"
-      },
-      browser: "./dist/browser.umd.js",
-      bugs: {
-        url: "https://github.com/Automattic/mongoose/issues/new"
-      },
-      bundleDependencies: false,
-      config: {
-        mongodbMemoryServer: {
-          disablePostinstall: true
-        }
-      },
+      type: "commonjs",
+      license: "MIT",
       dependencies: {
         bson: "^6.10.3",
         kareem: "2.6.3",
@@ -52084,11 +52238,10 @@ var require_package2 = __commonJS({
         ms: "2.1.3",
         sift: "17.1.3"
       },
-      deprecated: false,
-      description: "Mongoose MongoDB ODM",
       devDependencies: {
         "@babel/core": "7.27.1",
         "@babel/preset-env": "7.27.1",
+        "@mongodb-js/mongodb-downloader": "^0.3.9",
         "@typescript-eslint/eslint-plugin": "^8.19.1",
         "@typescript-eslint/parser": "^8.19.1",
         acquit: "1.3.0",
@@ -52116,6 +52269,7 @@ var require_package2 = __commonJS({
         mocha: "11.2.2",
         moment: "2.30.1",
         "mongodb-memory-server": "10.1.4",
+        "mongodb-runner": "^5.8.2",
         ncp: "^2.0.0",
         nyc: "15.1.0",
         pug: "3.0.3",
@@ -52130,72 +52284,66 @@ var require_package2 = __commonJS({
       directories: {
         lib: "./lib/mongoose"
       },
-      engines: {
-        node: ">=16.20.1"
-      },
-      funding: {
-        type: "opencollective",
-        url: "https://opencollective.com/mongoose"
-      },
-      homepage: "https://mongoosejs.com",
-      keywords: [
-        "mongodb",
-        "document",
-        "model",
-        "schema",
-        "database",
-        "odm",
-        "data",
-        "datastore",
-        "query",
-        "nosql",
-        "orm",
-        "db"
-      ],
-      license: "MIT",
-      main: "./index.js",
-      name: "mongoose",
-      repository: {
-        type: "git",
-        url: "git://github.com/Automattic/mongoose.git"
-      },
       scripts: {
-        "build-browser": "(rm ./dist/* || true) && node ./scripts/build-browser.js",
-        "docs:check-links": "blc http://127.0.0.1:8089 -ro",
         "docs:clean": "npm run docs:clean:stable",
+        "docs:clean:stable": "rimraf index.html && rimraf -rf ./docs/*.html  && rimraf -rf ./docs/api && rimraf -rf ./docs/tutorials/*.html && rimraf -rf ./docs/typescript/*.html && rimraf -rf ./docs/*.html && rimraf -rf ./docs/source/_docs && rimraf -rf ./tmp",
         "docs:clean:5x": "rimraf index.html && rimraf -rf ./docs/5.x && rimraf -rf ./docs/source/_docs && rimraf -rf ./tmp",
         "docs:clean:6x": "rimraf index.html && rimraf -rf ./docs/6.x && rimraf -rf ./docs/source/_docs && rimraf -rf ./tmp",
-        "docs:clean:stable": "rimraf index.html && rimraf -rf ./docs/*.html  && rimraf -rf ./docs/api && rimraf -rf ./docs/tutorials/*.html && rimraf -rf ./docs/typescript/*.html && rimraf -rf ./docs/*.html && rimraf -rf ./docs/source/_docs && rimraf -rf ./tmp",
         "docs:copy:tmp": "mkdirp ./tmp/docs/css && mkdirp ./tmp/docs/js && mkdirp ./tmp/docs/images && mkdirp ./tmp/docs/tutorials && mkdirp ./tmp/docs/typescript && mkdirp ./tmp/docs/api && ncp ./docs/css ./tmp/docs/css --filter=.css$ && ncp ./docs/js ./tmp/docs/js --filter=.js$ && ncp ./docs/images ./tmp/docs/images && ncp ./docs/tutorials ./tmp/docs/tutorials && ncp ./docs/typescript ./tmp/docs/typescript && ncp ./docs/api ./tmp/docs/api && cp index.html ./tmp && cp docs/*.html ./tmp/docs/",
         "docs:copy:tmp:5x": "rimraf ./docs/5.x && ncp ./tmp ./docs/5.x",
         "docs:copy:tmp:6x": "rimraf ./docs/6.x && ncp ./tmp ./docs/6.x",
         "docs:generate": "node ./scripts/website.js",
         "docs:generate:sponsorData": "node ./scripts/loadSponsorData.js",
+        "docs:test": "npm run docs:generate",
+        "docs:view": "node ./scripts/static.js",
+        "docs:prepare:publish:stable": "git checkout gh-pages && git merge master && npm run docs:generate",
         "docs:prepare:publish:5x": "git checkout 5.x && git merge 5.x && npm run docs:clean:stable && npm run docs:generate && npm run docs:copy:tmp && git checkout gh-pages && npm run docs:copy:tmp:5x",
         "docs:prepare:publish:6x": "git checkout 6.x && git merge 6.x && npm run docs:clean:stable && env DOCS_DEPLOY=true npm run docs:generate && mv ./docs/6.x ./tmp && git checkout gh-pages && npm run docs:copy:tmp:6x",
         "docs:prepare:publish:7x": "env DOCS_DEPLOY=true npm run docs:generate && git checkout gh-pages && rimraf ./docs/7.x && mv ./tmp ./docs/7.x",
-        "docs:prepare:publish:stable": "git checkout gh-pages && git merge master && npm run docs:generate",
-        "docs:test": "npm run docs:generate",
-        "docs:view": "node ./scripts/static.js",
+        "docs:check-links": "blc http://127.0.0.1:8089 -ro",
         lint: "eslint .",
         "lint-js": "eslint . --ext .js --ext .cjs",
-        "lint-md": 'markdownlint-cli2 "**/*.md" "#node_modules" "#benchmarks"',
         "lint-ts": "eslint . --ext .ts",
-        mongo: "node ./tools/repl.js",
+        "lint-md": 'markdownlint-cli2 "**/*.md" "#node_modules" "#benchmarks"',
+        "build-browser": "(rm ./dist/* || true) && node ./scripts/build-browser.js",
         prepublishOnly: "npm run build-browser",
-        "publish-7x": "npm publish --tag 7x",
         release: "git pull && git push origin master --tags && npm publish",
         "release-5x": "git pull origin 5.x && git push origin 5.x && git push origin 5.x --tags && npm publish --tag 5x",
         "release-6x": "git pull origin 6.x && git push origin 6.x && git push origin 6.x --tags && npm publish --tag 6x",
-        "setup-test-encryption": "bash scripts/configure-cluster-with-encryption.sh",
-        tdd: "mocha ./test/*.test.js --inspect --watch --recursive --watch-files ./**/*.{js,ts}",
+        mongo: "node ./tools/repl.js",
+        "publish-7x": "npm publish --tag 7x",
         test: "mocha --exit ./test/*.test.js",
-        "test-coverage": "nyc --reporter=html --reporter=text npm test",
         "test-deno": "deno run --allow-env --allow-read --allow-net --allow-run --allow-sys --allow-write ./test/deno.mjs",
-        "test-encryption": "mocha --exit ./test/encryption/*.test.js",
         "test-rs": "START_REPLICA_SET=1 mocha --timeout 30000 --exit ./test/*.test.js",
         "test-tsd": "node ./test/types/check-types-filename && tsd",
+        "setup-test-encryption": "node scripts/setup-encryption-tests.js",
+        "test-encryption": "mocha --exit ./test/encryption/*.test.js",
+        tdd: "mocha ./test/*.test.js --inspect --watch --recursive --watch-files ./**/*.{js,ts}",
+        "test-coverage": "nyc --reporter=html --reporter=text npm test",
         "ts-benchmark": "cd ./benchmarks/typescript/simple && npm install && npm run benchmark | node ../../../scripts/tsc-diagnostics-check"
+      },
+      main: "./index.js",
+      types: "./types/index.d.ts",
+      engines: {
+        node: ">=16.20.1"
+      },
+      bugs: {
+        url: "https://github.com/Automattic/mongoose/issues/new"
+      },
+      repository: {
+        type: "git",
+        url: "git://github.com/Automattic/mongoose.git"
+      },
+      homepage: "https://mongoosejs.com",
+      browser: "./dist/browser.umd.js",
+      config: {
+        mongodbMemoryServer: {
+          disablePostinstall: true
+        }
+      },
+      funding: {
+        type: "opencollective",
+        url: "https://opencollective.com/mongoose"
       },
       tsd: {
         directory: "test/types",
@@ -52209,10 +52357,7 @@ var require_package2 = __commonJS({
           module: "commonjs",
           target: "ES2017"
         }
-      },
-      type: "commonjs",
-      types: "./types/index.d.ts",
-      version: "8.14.3"
+      }
     };
   }
 });
@@ -52285,6 +52430,7 @@ var require_connection3 = __commonJS({
     var processConnectionOptions = require_processConnectionOptions();
     var setTimeout2 = require_timers().setTimeout;
     var utils = require_utils3();
+    var Schema = require_schema2();
     function NativeConnection() {
       MongooseConnection.apply(this, arguments);
       this._listening = false;
@@ -52446,6 +52592,16 @@ var require_connection3 = __commonJS({
           version: pkg.version
         };
       }
+      const { schemaMap, encryptedFieldsMap } = this._buildEncryptionSchemas();
+      if ((Object.keys(schemaMap).length > 0 || Object.keys(encryptedFieldsMap).length) && !options.autoEncryption) {
+        throw new Error("Must provide `autoEncryption` when connecting with encrypted schemas.");
+      }
+      if (Object.keys(schemaMap).length > 0) {
+        options.autoEncryption.schemaMap = schemaMap;
+      }
+      if (Object.keys(encryptedFieldsMap).length > 0) {
+        options.autoEncryption.encryptedFieldsMap = encryptedFieldsMap;
+      }
       this.readyState = STATES.connecting;
       this._connectionString = uri;
       let client;
@@ -52463,6 +52619,37 @@ var require_connection3 = __commonJS({
         _setClient(db, client, {}, db.name);
       }
       return this;
+    };
+    NativeConnection.prototype._buildEncryptionSchemas = function() {
+      const qeMappings = {};
+      const csfleMappings = {};
+      const encryptedModels = Object.values(this.models).filter((model) => model.schema._hasEncryptedFields());
+      for (const model of encryptedModels) {
+        const { schema, collection: { collectionName } } = model;
+        const namespace = `${this.$dbName}.${collectionName}`;
+        const mappings = schema.encryptionType() === "csfle" ? csfleMappings : qeMappings;
+        mappings[namespace] ??= new Schema({}, { encryptionType: schema.encryptionType() });
+        const isNonRootDiscriminator = schema.discriminatorMapping && !schema.discriminatorMapping.isRoot;
+        if (isNonRootDiscriminator) {
+          const rootSchema = schema._baseSchema;
+          schema.eachPath((pathname) => {
+            if (rootSchema.path(pathname)) return;
+            if (!mappings[namespace]._hasEncryptedField(pathname)) return;
+            throw new Error(`Cannot have duplicate keys in discriminators with encryption. key=${pathname}`);
+          });
+        }
+        mappings[namespace].add(schema);
+      }
+      const schemaMap = Object.fromEntries(Object.entries(csfleMappings).map(
+        ([namespace, schema]) => [namespace, schema._buildSchemaMap()]
+      ));
+      const encryptedFieldsMap = Object.fromEntries(Object.entries(qeMappings).map(
+        ([namespace, schema]) => [namespace, schema._buildEncryptedFields()]
+      ));
+      return {
+        schemaMap,
+        encryptedFieldsMap
+      };
     };
     NativeConnection.prototype.setClient = function setClient(client) {
       if (!(client instanceof mongodb.MongoClient)) {
@@ -52545,6 +52732,7 @@ var require_node_mongodb_native = __commonJS({
     exports2.BulkWriteResult = require_bulkWriteResult();
     exports2.Collection = require_collection3();
     exports2.Connection = require_connection3();
+    exports2.ClientEncryption = require_lib3().ClientEncryption;
   }
 });
 
@@ -55833,6 +56021,24 @@ var require_query = __commonJS({
         this.options.collation = collation;
       }
     }
+    function isEmptyFilter(obj) {
+      if (obj == null) return true;
+      if (typeof obj !== "object") return true;
+      if (Object.keys(obj).length === 0) return true;
+      for (const key of ["$and", "$or", "$nor"]) {
+        if (Array.isArray(obj[key])) {
+          if (obj[key].length === 0 || obj[key].every((item) => isEmptyFilter(item))) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    function checkRequireFilter(filter, options) {
+      if (options && options.requireFilter && isEmptyFilter(filter)) {
+        throw new Error("Empty or invalid filter not allowed with requireFilter enabled");
+      }
+    }
     Query.prototype = new mquery();
     Query.prototype.constructor = Query;
     Query.prototype.count = void 0;
@@ -56863,6 +57069,7 @@ var require_query = __commonJS({
     Query.prototype._deleteOne = async function _deleteOne() {
       this._applyTranslateAliases();
       this._castConditions();
+      checkRequireFilter(this._conditions, this.options);
       if (this.error() != null) {
         throw this.error();
       }
@@ -56886,6 +57093,7 @@ var require_query = __commonJS({
     Query.prototype._deleteMany = async function _deleteMany() {
       this._applyTranslateAliases();
       this._castConditions();
+      checkRequireFilter(this._conditions, this.options);
       if (this.error() != null) {
         throw this.error();
       }
@@ -56973,6 +57181,7 @@ var require_query = __commonJS({
     Query.prototype._findOneAndUpdate = async function _findOneAndUpdate() {
       this._applyTranslateAliases();
       this._castConditions();
+      checkRequireFilter(this._conditions, this.options);
       _castArrayFilters(this);
       if (this.error()) {
         throw this.error();
@@ -57048,6 +57257,7 @@ var require_query = __commonJS({
     Query.prototype._findOneAndDelete = async function _findOneAndDelete() {
       this._applyTranslateAliases();
       this._castConditions();
+      checkRequireFilter(this._conditions, this.options);
       if (this.error() != null) {
         throw this.error();
       }
@@ -57096,6 +57306,7 @@ var require_query = __commonJS({
     Query.prototype._findOneAndReplace = async function _findOneAndReplace() {
       this._applyTranslateAliases();
       this._castConditions();
+      checkRequireFilter(this._conditions, this.options);
       if (this.error() != null) {
         throw this.error();
       }
@@ -57254,6 +57465,7 @@ var require_query = __commonJS({
     async function _updateThunk(op) {
       this._applyTranslateAliases();
       this._castConditions();
+      checkRequireFilter(this._conditions, this.options);
       _castArrayFilters(this);
       if (this.error() != null) {
         throw this.error();
@@ -63062,7 +63274,7 @@ var require_model = __commonJS({
         decorateBulkWriteResult(bulkWriteResult, [], []);
         return bulkWriteResult;
       }
-      const validations = ops.map((op) => castBulkWrite(this, op, options));
+      const validations = options?._skipCastBulkWrite ? [] : ops.map((op) => castBulkWrite(this, op, options));
       const asyncLocalStorage = this.db.base.transactionAsyncLocalStorage?.getStore();
       if ((!options || !options.hasOwnProperty("session")) && asyncLocalStorage?.session != null) {
         options = { ...options, session: asyncLocalStorage.session };
@@ -63096,6 +63308,9 @@ var require_model = __commonJS({
         let validationErrors = [];
         const results = [];
         await new Promise((resolve) => {
+          if (validations.length === 0) {
+            return resolve();
+          }
           for (let i = 0; i < validations.length; ++i) {
             validations[i]((err) => {
               if (err == null) {
@@ -63192,8 +63407,9 @@ var require_model = __commonJS({
         }
       }
       await Promise.all(documents.map((doc) => buildPreSavePromise(doc, options)));
-      const writeOperations = this.buildBulkWriteOperations(documents, { skipValidation: true, timestamps: options.timestamps });
-      const { bulkWriteResult, bulkWriteError } = await this.bulkWrite(writeOperations, { skipValidation: true, ...options }).then(
+      const writeOperations = this.buildBulkWriteOperations(documents, options);
+      const opts = { skipValidation: true, _skipCastBulkWrite: true, ...options };
+      const { bulkWriteResult, bulkWriteError } = await this.bulkWrite(writeOperations, opts).then(
         (res) => ({ bulkWriteResult: res, bulkWriteError: null }),
         (err) => ({ bulkWriteResult: null, bulkWriteError: err })
       );
@@ -63371,23 +63587,23 @@ var require_model = __commonJS({
         throw new Error(`bulkSave expects an array of documents to be passed, received \`${documents}\` instead`);
       }
       setDefaultOptions();
-      const discriminatorKey = this.schema.options.discriminatorKey;
-      const writeOperations = documents.reduce((accumulator, document2, i) => {
+      const writeOperations = documents.map((document2, i) => {
         if (!options.skipValidation) {
           if (!(document2 instanceof Document)) {
             throw new Error(`documents.${i} was not a mongoose document, documents must be an array of mongoose documents (instanceof mongoose.Document).`);
           }
-          const validationError = document2.validateSync();
-          if (validationError) {
-            throw validationError;
+          if (options.validateBeforeSave == null || options.validateBeforeSave) {
+            const err = document2.validateSync();
+            if (err != null) {
+              throw err;
+            }
           }
         }
         const isANewDocument = document2.isNew;
         if (isANewDocument) {
           const writeOperation = { insertOne: { document: document2 } };
           utils.injectTimestampsOption(writeOperation.insertOne, options.timestamps);
-          accumulator.push(writeOperation);
-          return accumulator;
+          return writeOperation;
         }
         const delta = document2.$__delta();
         const isDocumentWithChanges = delta != null && !utils.isEmptyObject(delta[0]);
@@ -63403,17 +63619,13 @@ var require_model = __commonJS({
               where[paths[i2]] = document2[paths[i2]];
             }
           }
-          if (document2[discriminatorKey] != null && !(discriminatorKey in where)) {
-            where[discriminatorKey] = document2[discriminatorKey];
-          }
           document2.$__version(where, delta);
           const writeOperation = { updateOne: { filter: where, update: changes } };
           utils.injectTimestampsOption(writeOperation.updateOne, options.timestamps);
-          accumulator.push(writeOperation);
-          return accumulator;
+          return writeOperation;
         }
-        return accumulator;
-      }, []);
+        return null;
+      }).filter((op) => op !== null);
       return writeOperations;
       function setDefaultOptions() {
         options = options || {};
@@ -63944,6 +64156,28 @@ var require_model = __commonJS({
       model._applyQueryMiddleware();
       applyQueryMethods(model, schema.query);
       return model;
+    };
+    Model.clientEncryption = function clientEncryption() {
+      const ClientEncryption = this.base.driver.get().ClientEncryption;
+      if (!ClientEncryption) {
+        throw new Error("The mongodb driver must be used to obtain a ClientEncryption object.");
+      }
+      const client = this.collection?.conn?.client;
+      if (!client) return null;
+      const autoEncryptionOptions = client.options.autoEncryption;
+      if (!autoEncryptionOptions) return null;
+      const {
+        keyVaultNamespace,
+        keyVaultClient,
+        kmsProviders,
+        credentialProviders,
+        proxyOptions,
+        tlsOptions
+      } = autoEncryptionOptions;
+      return new ClientEncryption(
+        keyVaultClient ?? client,
+        { keyVaultNamespace, kmsProviders, credentialProviders, proxyOptions, tlsOptions }
+      );
     };
     Model.$__updateConnection = function $__updateConnection(newConnection) {
       this.db = newConnection;
@@ -68881,7 +69115,6 @@ module.exports = __toCommonJS(login_exports);
 var import_mongoose = __toESM(require_mongoose2());
 var import_dotenv = __toESM(require_main());
 import_dotenv.default.config();
-console.log("ENV MONGODB_URI:", process.env.MONGODB_URI);
 var MONGODB_URI = process.env.MONGODB_URI || "";
 var isConnected = false;
 var connectDB = async () => {
@@ -68892,7 +69125,7 @@ var connectDB = async () => {
     console.log("\u2705 MongoDB connected");
   } catch (err) {
     console.error("\u274C MongoDB connection error:", err);
-    throw err;
+    throw new Error("MongoDB connection failed");
   }
 };
 
@@ -68908,31 +69141,22 @@ var Employee_default = import_mongoose2.default.models.Employee || import_mongoo
 
 // models/Tourist.ts
 var import_mongoose3 = __toESM(require_mongoose2());
-var TouristSchema = new import_mongoose3.default.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, "Name is required"],
-      trim: true
-    },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-      lowercase: true,
-      match: [/\S+@\S+\.\S+/, "Invalid email format"]
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-      minlength: [6, "Password must be at least 6 characters"]
-    }
+var touristSchema = new import_mongoose3.default.Schema({
+  name: { type: String, required: true, trim: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    match: [/\S+@\S+\.\S+/, "Invalid email format"]
   },
-  {
-    timestamps: true
+  password: {
+    type: String,
+    required: true,
+    minlength: 6
   }
-);
-var Tourist_default = import_mongoose3.default.models.Tourist || import_mongoose3.default.model("Tourist", TouristSchema);
+}, { timestamps: true });
+var Tourist_default = import_mongoose3.default.models.Tourist || import_mongoose3.default.model("Tourist", touristSchema);
 
 // node_modules/bcryptjs/index.js
 var import_crypto = __toESM(require("crypto"), 1);
@@ -70659,22 +70883,38 @@ var bcryptjs_default = {
 
 // netlify/functions/login.ts
 var import_jsonwebtoken = __toESM(require_jsonwebtoken());
+
+// lib/utils/response.ts
+var response = (statusCode, body) => ({
+  statusCode,
+  body: JSON.stringify(body)
+});
+
+// lib/utils/errorHandler.ts
+var errorHandler = (error) => {
+  if (error instanceof Error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: error.message })
+    };
+  }
+  return {
+    statusCode: 500,
+    body: JSON.stringify({ message: "Unknown server error" })
+  };
+};
+
+// netlify/functions/login.ts
 var JWT_SECRET = process.env.JWT_SECRET || "secretkey";
 var handler = async (event) => {
   if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: "Method Not Allowed"
-    };
+    return response(405, { message: "Method Not Allowed" });
   }
   try {
     await connectDB();
     const { email, password } = JSON.parse(event.body || "{}");
     if (!email || !password) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ message: "Email and password are required" })
-      };
+      return response(400, { message: "Email and password are required" });
     }
     let user = await Employee_default.findOne({ email });
     let role = "pegawai";
@@ -70683,44 +70923,28 @@ var handler = async (event) => {
       role = "turis";
     }
     if (!user) {
-      return {
-        statusCode: 401,
-        body: JSON.stringify({ message: "Invalid credentials" })
-      };
+      return response(401, { message: "Invalid credentials" });
     }
     const isMatch = await bcryptjs_default.compare(password, user.password);
     if (!isMatch) {
-      return {
-        statusCode: 401,
-        body: JSON.stringify({ message: "Invalid credentials" })
-      };
+      return response(401, { message: "Invalid credentials" });
     }
     const token = import_jsonwebtoken.default.sign(
-      {
-        id: user._id,
-        email: user.email,
-        role
-      },
+      { id: user._id, email: user.email, role },
       JWT_SECRET,
       { expiresIn: "7d" }
     );
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        token,
-        user: {
-          id: user._id,
-          email: user.email,
-          name: user.name,
-          role
-        }
-      })
-    };
+    return response(200, {
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role
+      }
+    });
   } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: "Internal Server Error", error: error.message })
-    };
+    return errorHandler(error);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

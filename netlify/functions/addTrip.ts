@@ -1,9 +1,9 @@
 import { Handler } from "@netlify/functions";
-import { connectDB } from "../../../lib/db";
-import TripModel from "../../../models/Trip";
-import { response } from "../../../lib/utils/response";
-import { errorHandler } from "../../../lib/utils/errorHandler";
-import { Trip } from "./types";
+import { connectDB } from "../../lib/db";
+import TripModel from "../../models/Trip";
+import { response } from "../../lib/utils/response";
+import { errorHandler } from "../../lib/utils/errorHandler";
+import { Trip } from "../functions/Trip/types";
 
 const handler: Handler = async (event) => {
   if (event.httpMethod !== "POST") {
