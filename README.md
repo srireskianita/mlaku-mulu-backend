@@ -74,6 +74,7 @@ mlaku-mulu-backend/
 Gunakan Postman atau sejenis untuk uji endpoint.
 
 Pastikan .env sesuai dengan konfigurasi lokal kamu.
+MONGODB_URI=mongodb://localhost:27017/mlaku
 
 
 🌐 Deployment
